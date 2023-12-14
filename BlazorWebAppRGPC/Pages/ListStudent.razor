@@ -1,0 +1,27 @@
+﻿@page "/listStudent"
+@inject IStudentRepository studentRepository
+
+<h3>ListStudent</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>DOB</th>
+            <th>Address</th>
+            <th>Class</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in listStudent)
+        {
+            <tr>
+                <td>@s.Id</td>
+                <td>@s.Name</td>
+                <td>@s.Dob.ToString("dd/MM/yyyy")</td>
+                <td>@s.Address</td>
+                <td>@s.ClassStudent.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
