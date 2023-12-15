@@ -4,7 +4,7 @@ namespace BlazorWebAppRGPC.Service.IService
 {
     interface IStudentService
     {
-        public List<Student> GetAllStudents();
+        public void GetAllStudents();
 
         public void AddNewStudent(Student student);
 

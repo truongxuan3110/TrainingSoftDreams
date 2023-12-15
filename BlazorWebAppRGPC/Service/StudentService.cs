@@ -9,8 +9,6 @@ namespace BlazorWebAppRGPC.Service
 {
     public class StudentService : IStudentService
     {
-        StudentMapper studentMapper = new StudentMapper();
-
         public void AddNewStudent(Student student)
         {
             throw new NotImplementedException();
@@ -21,18 +19,18 @@ namespace BlazorWebAppRGPC.Service
             throw new NotImplementedException();
         }
 
-        public List<Student> GetAllStudents()
+        public void GetAllStudents()
         {
-            List<Student> listStudents = new List<Student>();
-            var client = getService();
-            Empty empty = new Empty();
-            var list = client.GetListStudents(empty);
-            foreach ( var student in list.List)
-            {
-                Student s = studentMapper.StudentGrpcToStudent(student);
-                listStudents.Add(s);
-            }
-            return listStudents;
+            //List<Student> listStudents = new List<Student>();
+            //var client = getService();
+            //Empty empty = new Empty();
+            //var list = client.GetListStudents(empty);
+            //foreach ( var student in list.List)
+            //{
+            //    Student s = studentMapper.StudentGrpcToStudent(student);
+            //    listStudents.Add(s);
+            //}
+            //return listStudents;
         }
 
         public int GetIDNewStudent()

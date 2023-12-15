@@ -1,5 +1,7 @@
 using BlazorWebAppRGPC.Data;
 using BlazorWebAppRGPC.Model.Mapper;
+using BlazorWebAppRGPC.Repository;
+using BlazorWebAppRGPC.Repository.IRepository;
 using BlazorWebAppRGPC.Service;
 using BlazorWebAppRGPC.Service.IService;
 using Microsoft.AspNetCore.Components;
@@ -15,12 +17,13 @@ namespace BlazorWebAppRGPC
 
             // Add services to the container.
             builder.Services.AddSingleton<NHibernate.ISessionFactory>(NHibernateConfig.BuildSessionFactory());
+            builder.Services.AddSingleton<IStudentRepository, StudentRepository>();
+            builder.Services.AddSingleton<IClassRepository, ClassRepository>();
             builder.Services.AddSingleton<StudentMapper>();
             builder.Services.AddRazorPages(); 
             builder.Services.AddAntDesign();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddSingleton<WeatherForecastService>();
-            builder.Services.AddSingleton<IStudentService ,StudentService>();
 
             var app = builder.Build();
 
