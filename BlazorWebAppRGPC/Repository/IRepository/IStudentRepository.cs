@@ -11,9 +11,9 @@ namespace BlazorWebAppRGPC.Repository.IRepository
     {
         public List<Student> GetAllStudents();
 
-        public void AddNewStudent(Student student);
+        public Boolean AddNewStudent(Student student);
 
-        public void UpdateStudent(Student studentUpdate);
+        public Boolean UpdateStudent(Student studentUpdate);
 
         public void DeleteStudent(Student student);
 

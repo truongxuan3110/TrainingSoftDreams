@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleGRPC", "SimpleGRPC\Si
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssignmentGRPC", "AssignmentGRPC\AssignmentGRPC.csproj", "{87B6C5D0-7BF1-4A68-9589-7F779D85A28D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share", "Share\Share.csproj", "{687D4629-35EC-402A-AC9B-7D484E6952DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Share", "Share\Share.csproj", "{687D4629-35EC-402A-AC9B-7D484E6952DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAppRGPC", "BlazorWebAppRGPC\BlazorWebAppRGPC.csproj", "{3B6EE553-833F-4E6F-BE83-371CBCBF31E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAppRGPC", "BlazorWebAppRGPC\BlazorWebAppRGPC.csproj", "{3B6EE553-833F-4E6F-BE83-371CBCBF31E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

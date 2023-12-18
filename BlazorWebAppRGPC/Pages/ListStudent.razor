@@ -3,45 +3,51 @@
 @using BlazorWebAppRGPC.Model.DTO;
 @using BlazorWebAppRGPC.Repository.IRepository;
 @using AntDesign;
+@using System.IO;
 @inject IStudentRepository studentRepository
+@inject IMessageService message
+
 
 <h3>ListStudent</h3>
-<Button OnClick="ShowPopup">Add</Button>
-<EditForm Model="@studentSearch" OnValidSubmit="@OnValidSubmit" OnInvalidSubmit="@OnInvalidSubmit" @ref="formSearch">
-    <div class="row">
-        <div class="form-group col-md-2">
-            <label for="name">Name</label>
-            <Input @bind-Value="@studentSearch.Name" id="name" />
+<Button OnClick="()=>ShowPopup(null)" Icon="plus">Add</Button>
+<div>
+    <EditForm Model="@studentSearch" OnValidSubmit="@OnValidSubmit" OnInvalidSubmit="@OnInvalidSubmit">
+        <div class="row">
+            <div class="form-group col-md-2">
+                <label for="name">Name</label>
+                <Input @bind-Value="@studentSearch.Name" id="name" />
+            </div>
+            <div class="form-group col-md-2">
+                <label for="address">Address</label>
+                <Input @bind-Value="@studentSearch.Address" id="address" />
+            </div>
+            <div class="form-group col-md-2">
+                <label for="startDate">Start Date</label>
+                <DatePicker @bind-Value="@studentSearch.StartDate" id="startDate" Format="dd/MM/yyyy" />
+            </div>
+            <div class="form-group col-md-2">
+                <label for="endDate">End Date</label>
+                <DatePicker @bind-Value="@studentSearch.EndDate" id="endDate" Format="dd/MM/yyyy" />
+            </div>
+            <div class="form-group col-md-2">
+                <label for="form-select">Class</label>
+                <InputSelect @bind-Value="@studentSearch.ClassID" class="form-select">
+                    <option value="-1">All Class</option>
+                    @foreach (var c in listClass)
+                    {
+                        <option value="@c.Id">@c.Name</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="form-group col-md-2">
+                <Button HtmlType="submit" Style="margin-top: 25px">Search</Button>
+            </div>
         </div>
-        <div class="form-group col-md-2">
-            <label for="address">Address</label>
-            <Input @bind-Value="@studentSearch.Address" id="address" />
-        </div>
-        <div class="form-group col-md-2">
-            <label for="startDate">Start Date</label>
-            <DatePicker @bind-Value="@studentSearch.StartDate" id="startDate" Format="dd/MM/yyyy" />
-        </div>
-        <div class="form-group col-md-2">
-            <label for="endDate">End Date</label>
-            <DatePicker @bind-Value="@studentSearch.EndDate" id="endDate" Format="dd/MM/yyyy" />
-        </div>
-        <div class="form-group col-md-2">
-            <label for="form-select">Class</label>
-            <InputSelect @bind-Value="@studentSearch.ClassID" class="form-select">
-                <option value="-1">All Class</option>
-                @foreach (var c in listClass)
-                {
-                    <option value="@c.Id">@c.Name</option>
-                }
-            </InputSelect>
-        </div>
-        <div class="form-group col-md-2">
-            <Button HtmlType="submit" Style="margin-top: 25px">Search</Button>
-        </div>
-    </div>
- </EditForm>
- <br/>
-<Table @ref="table" TItem="StudentViewDTO" Total="totalCount" DataSource="@listStudentViewDTO"
+    </EditForm>
+
+</div>
+<br/>
+<Table TItem="StudentViewDTO" Total="totalCount" DataSource="@listStudentViewDTO"
 @bind-PageIndex="pageNumber" @bind-PageSize="pageSize" OnChange="OnPaging">
     <Column @bind-Field="context.Id"></Column>
     <Column @bind-Field="context.Name"></Column>
@@ -51,36 +57,67 @@
     <ActionColumn Title="Action">
         <Space Size=@("middle")>
             <SpaceItem>
-                <a>Update</a>
+                <Button OnClick="()=>ShowPopup(context)"><Icon Type="edit"></Icon></Button>
             </SpaceItem>
             <SpaceItem>
-                <a>Delete</a>
+                <Popconfirm Title="Are you sure to delete this student?"
+                            OnConfirm="() => DeleteStudent(context)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <Button><Icon Type="delete" Theme="outline" /></Button>
+                </Popconfirm>
             </SpaceItem>
         </Space>
     </ActionColumn>
 </Table>
 
-<Modal Visible="@isPopupVisible" Title="Add Student" OnCancel="HidePopup">
-    <EditForm Model="@studentAdd" OnValidSubmit="@OnAddUserSubmit">
-        <FormItem Label="Name">
-            <Input @bind-Value="@studentAdd.Name" />
-        </FormItem>
-        <FormItem Label="Address">
-            <Input @bind-Value="@studentAdd.Address" />
-        </FormItem>
-        <FormItem Label="Dob">
-            <DatePicker @bind-Value="@studentAdd.Dob" />
-        </FormItem>
-        <FormItem Label="Class">
-            <InputSelect @bind-Value="@studentAdd.ClassId" class="form-select">
-                @foreach (var c in listClass)
-                {
-                    <option value="@c.Id">@c.Name</option>
-                }
-            </InputSelect>
-        </FormItem>
-        <FormItem>
-            <Button HtmlType="submit" Type="primary">Save</Button>
-        </FormItem>
+<Modal Visible="@isPopupVisible" Title="Add/Update Student" Closable="false">
+    <EditForm Model="studentDTO" OnValidSubmit="OnSubmitSuccess" OnInvalidSubmit="OnSubmitFail">
+        <DataAnnotationsValidator />
+        <div class="form-row">
+            <div class="col-md-12 mb-8">
+                <div class="form-outline">
+                    <label class="form-label" for="name">Name</label>
+                    <InputText type="text" id="name" class="form-control" placeholder="Name"
+                    @bind-Value="@studentDTO.Name" />
+                    <ValidationMessage For="@(() => studentDTO.Name)" />
+                </div>
+            </div>
+            <div class="col-md-12 mb-8">
+                <div class="form-outline">
+                    <label class="form-label" for="address">Address</label>
+                    <InputText type="text" id="address" class="form-control" placeholder="Address"
+                    @bind-Value="@studentDTO.Address" />
+                    <ValidationMessage For="@(() => studentDTO.Address)" />
+                </div>
+            </div>
+            <div class="col-md-12 mb-8">
+                <div class="form-outline">
+                    <label class="form-label" for="dob">Date of Birth</label>
+                    <DatePicker @bind-Value="@studentDTO.Dob" />
+                    <ValidationMessage For="@(() => studentDTO.Dob)" />
+                </div>
+            </div>
+            <div class="col-md-12 mb-8">
+                <div class="form-outline">
+                    <label class="form-label" for="class">Class</label>
+                    <InputSelect @bind-Value="@studentDTO.ClassId" class="form-select">
+                        @foreach (var c in listClass)
+                        {
+                            <option value="@c.Id">@c.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => studentDTO.ClassId)" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <Button HtmlType="submit">Save</Button>
+        <Button Type="default" OnClick="_=>close()">Cancel</Button>
     </EditForm>
 </Modal>
+<style>
+    .ant-modal-footer {
+        display: none !important;
+    }
+</style>

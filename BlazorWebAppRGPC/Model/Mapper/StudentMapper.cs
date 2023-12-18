@@ -14,26 +14,6 @@ namespace BlazorWebAppRGPC.Model.Mapper
             _studentRepository = studentRepository;
             _classRepository = classRepository;
         }
-        public StudentGrpc StudentToStudentGrpc(Student _student)
-        {
-            StudentGrpc studentGrpc = new StudentGrpc();
-            studentGrpc.Id = _student.Id;
-            studentGrpc.Name = _student.Name;
-            studentGrpc.Address = _student.Address;
-            studentGrpc.Dob = _student.Dob;
-            studentGrpc.ClassId = _student.ClassStudent.Id;
-            return studentGrpc;
-        }
-        public Student StudentGrpcToStudent(StudentGrpc studentGrpc)
-        {
-            Student _student = new Student();
-            _student.Id = studentGrpc.Id;
-            _student.Name = studentGrpc.Name;
-            _student.Address = studentGrpc.Address;
-            _student.Dob = studentGrpc.Dob;
-            //_student.ClassStudent = _classRepository.GetClassById(studentGrpc.ClassId);
-            return _student;
-        }
         public StudentViewDTO StudentToStudentViewDTO(Student student)
         {
             StudentViewDTO studentViewDTO = new StudentViewDTO();
@@ -68,6 +48,23 @@ namespace BlazorWebAppRGPC.Model.Mapper
                 return student;
             }
             return null;
+        }
+        public StudentDTO StudentToStudentDTO(Student student, bool isCreate)
+        {
+            StudentDTO studentDTO = new StudentDTO();
+            if (isCreate)
+            {
+                return studentDTO;
+            }
+            else
+            {
+                studentDTO.Id = student.Id;
+                studentDTO.Name = student.Name;
+                studentDTO.Address = student.Address;
+                studentDTO.Dob = student.Dob;
+                studentDTO.ClassId = student.ClassStudent.Id;
+                return studentDTO;
+            }
         }
         public List<StudentViewDTO> listStudentToListStudentViewDTO(List<Student> students)
         {

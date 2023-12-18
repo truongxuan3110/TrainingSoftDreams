@@ -19,7 +19,7 @@ namespace BlazorWebAppRGPC.Repository
             _session = session;
         }
 
-        public void AddNewStudent(Student student)
+        public Boolean AddNewStudent(Student student)
         {
             using (var session = _session.OpenStatelessSession())
             {
@@ -30,12 +30,14 @@ namespace BlazorWebAppRGPC.Repository
 
                         session.Insert(student);
                         transaction.Commit();
+                        return true;
                     }
                     catch (Exception ex)
                     {
 
                         Console.WriteLine($"An error occurred: {ex.Message}");
                         transaction.Rollback();
+                        return false;
                     }
                 }
             }
@@ -102,7 +104,7 @@ namespace BlazorWebAppRGPC.Repository
             }
         }
 
-        public void UpdateStudent(Student studentUpdate)
+        public Boolean UpdateStudent(Student studentUpdate)
         {
             using (var session = _session.OpenStatelessSession())
             {
@@ -113,12 +115,14 @@ namespace BlazorWebAppRGPC.Repository
 
                         session.Update(studentUpdate);
                         transaction.Commit();
+                        return true;
                     }
                     catch (Exception ex)
                     {
 
                         Console.WriteLine($"An error occurred: {ex.Message}");
                         transaction.Rollback();
+                        return false;
                     }
                 }
             }
