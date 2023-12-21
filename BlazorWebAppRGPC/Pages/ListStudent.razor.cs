@@ -66,7 +66,7 @@ namespace BlazorWebAppRGPC.Pages
         private async void UpdateListStudents()
         {
             pageNumber = 1;
-            loadDataAsync();
+            await loadDataAsync();
         }
         public async Task OnPaging()
         {

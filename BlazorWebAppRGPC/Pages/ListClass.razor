@@ -1,3 +1,74 @@
 ﻿@page "/listClass"
-<h3>ListClass</h3>
+@using AntDesign;
+@using BlazorWebAppRGPC.Model.DTO;
+@using BlazorWebAppRGPC.Model;
+@inject IMessageService message
 
+
+<h3>ListClass</h3>
+<Button OnClick="()=>ShowPopupClass(null)" Icon="plus">Add</Button>
+
+<Table TItem="ClassViewDTO" DataSource="@listClass">
+    <Column @bind-Field="context.Id"></Column>
+    <Column @bind-Field="context.Name"></Column>
+    <Column @bind-Field="context.SubjectName"></Column>
+    <Column @bind-Field="context.TeacherName"></Column>
+    <ActionColumn Title="Action">
+        <Space Size=@("middle")>
+            <SpaceItem>
+                <Button OnClick="()=>ShowPopupClass(context)"><Icon Type="edit"></Icon></Button>
+            </SpaceItem>
+            @* <SpaceItem>
+                <Popconfirm Title="Are you sure to delete this student?"
+                            OnConfirm="() => DeleteStudent(context)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <Button><Icon Type="delete" Theme="outline" /></Button>
+                </Popconfirm>
+            </SpaceItem> *@
+        </Space>
+    </ActionColumn>
+</Table>
+<Modal Visible="@isPopupVisible" Title="Add/Update Class" Closable="false">
+    <EditForm Model="classDTO" OnValidSubmit="OnSubmitSuccess" OnInvalidSubmit="OnSubmitFail">
+        <DataAnnotationsValidator />
+        <div class="form-row">
+            <div class="col-md-12 mb-8">
+                <div class="form-outline">
+                    <label class="form-label" for="name">Name</label>
+                    <InputText type="text" id="name" class="form-control" placeholder="Name"
+                    @bind-Value="@classDTO.Name" />
+                    <ValidationMessage For="@(() => classDTO.Name)" />
+                </div>
+            </div>
+            <div class="col-md-12 mb-8">
+                <div class="form-outline">
+                    <label class="form-label" for="address">Subject</label>
+                    <InputText type="text" id="subject" class="form-control" placeholder="Subject"
+                    @bind-Value="@classDTO.SubjectName" />
+                    <ValidationMessage For="@(() => classDTO.SubjectName)" />
+                </div>
+            </div>
+            <div class="col-md-12 mb-8">
+                <div class="form-outline">
+                    <label class="form-label" for="class">Teacher</label>
+                    <InputSelect @bind-Value="@classDTO.TeacherId" class="form-select">
+                        @foreach (var c in listTeacher)
+                        {
+                            <option value="@c.Id">@c.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => classDTO.TeacherId)" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <Button HtmlType="submit">Save</Button>
+        <Button Type="default" OnClick="_=>close()">Cancel</Button>
+    </EditForm>
+</Modal>
+<style>
+    .ant-modal-footer {
+        display: none !important;
+    }
+</style>

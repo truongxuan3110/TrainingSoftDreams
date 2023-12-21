@@ -20,10 +20,13 @@ namespace BlazorWebAppRGPC
             builder.Services.AddSingleton<IStudentRepository, StudentRepository>();
             builder.Services.AddSingleton<IClassRepository, ClassRepository>();
             builder.Services.AddSingleton<StudentMapper>();
+            builder.Services.AddSingleton<ClassMapper>();
             builder.Services.AddRazorPages(); 
             builder.Services.AddAntDesign();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddSingleton<WeatherForecastService>();
+            builder.Services.AddSingleton<IClassService, ClassService>();
+            builder.Services.AddSingleton<ITeacherService, TeacherService>();
 
             var app = builder.Build();
 

@@ -1,4 +1,6 @@
 using ProtoBuf.Grpc.Server;
+using SimpleGRPC.Repository.IRepository;
+using SimpleGRPC.Repository;
 using SimpleGRPC.Services;
 
 namespace SimpleGRPC
@@ -13,6 +15,9 @@ namespace SimpleGRPC
             // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
             builder.Services.AddSingleton<NHibernate.ISessionFactory>(NHibernateConfig.BuildSessionFactory());
+            builder.Services.AddSingleton<IClassRepository, ClassRepository>();
+            builder.Services.AddSingleton<ITeacherRepository, TeacherRepository>();
+
             // Add services to the container.
             builder.Services.AddCodeFirstGrpc();
 
@@ -21,6 +26,8 @@ namespace SimpleGRPC
 
             // Configure the HTTP request pipeline.
             app.MapGrpcService<GreeterService>();
+            app.MapGrpcService<ClassService>();
+            app.MapGrpcService<TeacherService>();
             app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
             app.Run();

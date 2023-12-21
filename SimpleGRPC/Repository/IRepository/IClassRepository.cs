@@ -1,4 +1,5 @@
-﻿using SimpleGRPC.Model;
+﻿using Google.Protobuf.WellKnownTypes;
+using SimpleGRPC.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,12 @@ namespace SimpleGRPC.Repository.IRepository
     {
         public List<Class> GetAllClasses();
         public Class GetClassById(int id);
+        public void AddNewClass(Class classNew);
+
+        public Boolean UpdateClass(Class classUpdate);
+
+        public void DeleteStudent(Class classDelete);
+        public int GetIDNewClass();
+
     }
 }

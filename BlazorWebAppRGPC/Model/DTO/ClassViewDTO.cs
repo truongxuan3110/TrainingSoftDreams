@@ -1,0 +1,14 @@
+﻿namespace BlazorWebAppRGPC.Model.DTO
+{
+    public class ClassViewDTO
+    {
+        public int Id { get; set; }
+
+        public String Name { get; set; }
+
+        public String SubjectName { get; set; }
+
+        public string TeacherName { get; set; }
+
+    }
+}

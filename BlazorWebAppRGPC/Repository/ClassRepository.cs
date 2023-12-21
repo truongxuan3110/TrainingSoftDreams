@@ -1,13 +1,7 @@
 ﻿using BlazorWebAppRGPC.Model;
 using BlazorWebAppRGPC.Repository.IRepository;
 using NHibernate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NHibernate.Linq;
-
 
 namespace BlazorWebAppRGPC.Repository
 {
@@ -23,8 +17,9 @@ namespace BlazorWebAppRGPC.Repository
         {
             using (var session = _session.OpenSession())
             {
-                List<Class> classes = session.Query<Class>().Fetch(s=>s.Teacher).ToList();
-                return classes;
+                return session.Query<Class>()
+                    .Fetch(x=>x.Teacher)
+                    .ToList();
             }
         }
 
@@ -32,8 +27,7 @@ namespace BlazorWebAppRGPC.Repository
         {
             using (var session = _session.OpenSession())
             {
-                return session.Query<Class>()
-                    .Where(s => s.Id == id).First();
+                return session.Query<Class>().Where(x => x.Id == id).FirstOrDefault();
             }
         }
     }
