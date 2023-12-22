@@ -8,7 +8,37 @@
 <h3>ListClass</h3>
 <Button OnClick="()=>ShowPopupClass(null)" Icon="plus">Add</Button>
 
-<Table TItem="ClassViewDTO" DataSource="@listClass">
+<div>
+    <EditForm Model="@classSearch" OnValidSubmit="@OnValidSubmit" OnInvalidSubmit="@OnInvalidSubmit">
+        <div class="row">
+            <div class="form-group col-md-2">
+                <label for="name">Class Name</label>
+                <Input @bind-Value="@classSearch.Name" id="name" />
+            </div>
+            <div class="form-group col-md-2">
+                <label for="address">Subject</label>
+                <Input @bind-Value="@classSearch.SubjectName" id="address" />
+            </div>
+            <div class="form-group col-md-2">
+                <label for="form-select">Teacher</label>
+                <InputSelect @bind-Value="@classSearch.TeacherId" class="form-select">
+                    <option value="-1">All Teachers</option>
+                    @foreach (var c in listTeacher)
+                    {
+                        <option value="@c.Id">@c.Name</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="form-group col-md-2">
+                <Button HtmlType="submit" Style="margin-top: 25px">Search</Button>
+            </div>
+        </div>
+    </EditForm>
+
+</div>
+<br />
+
+<Table TItem="ClassViewDTO" DataSource="@listClassPage" Total="totalCount" @bind-PageIndex="pageNumber" @bind-PageSize="pageSize" OnChange="OnPaging">
     <Column @bind-Field="context.Id"></Column>
     <Column @bind-Field="context.Name"></Column>
     <Column @bind-Field="context.SubjectName"></Column>
@@ -18,14 +48,14 @@
             <SpaceItem>
                 <Button OnClick="()=>ShowPopupClass(context)"><Icon Type="edit"></Icon></Button>
             </SpaceItem>
-            @* <SpaceItem>
-                <Popconfirm Title="Are you sure to delete this student?"
-                            OnConfirm="() => DeleteStudent(context)"
+            <SpaceItem>
+                <Popconfirm Title="Are you sure to delete this class?"
+                            OnConfirm="() => DeleteClass(context)"
                             OkText="Yes"
                             CancelText="No">
                     <Button><Icon Type="delete" Theme="outline" /></Button>
                 </Popconfirm>
-            </SpaceItem> *@
+            </SpaceItem>
         </Space>
     </ActionColumn>
 </Table>

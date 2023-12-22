@@ -8,15 +8,6 @@ namespace BlazorWebAppRGPC.Model.Mapper
     public class ClassMapper
     {
         ITeacherService teacherService = new TeacherService();
-        public ClassGrpc ClassToClassGrpc(Class _class)
-        {
-            ClassGrpc classGrpc = new ClassGrpc();
-            classGrpc.Id = _class.Id;
-            classGrpc.Name = _class.Name;
-            classGrpc.Subject = _class.SubjectName;
-            classGrpc.TeacherId = _class.Teacher.Id;
-            return classGrpc;
-        }
         public Class ClassGrpcToClass(ClassGrpc classGrpc)
         {
             Class _class = new Class();
@@ -33,7 +24,17 @@ namespace BlazorWebAppRGPC.Model.Mapper
             _class.Name = classGrpc.Name;
             _class.SubjectName = classGrpc.Subject;
             _class.TeacherName = teacherService.GetTeacherById(classGrpc.TeacherId).Name;
+            _class.TeacherId = classGrpc.TeacherId;
             return _class;
+        }
+        public ClassGrpc ClassViewDTOToClassGrpc(ClassViewDTO classViewDTO)
+        {
+            ClassGrpc classGrpc = new ClassGrpc();
+            classGrpc.Id = classViewDTO.Id;
+            classGrpc.Name = classViewDTO.Name;
+            classGrpc.Subject = classViewDTO.SubjectName;
+            classGrpc.TeacherId= classViewDTO.TeacherId;
+            return classGrpc;
         }
         public ClassGrpc ClassDTOToClassGrpc(ClassDTO classDTO)
         {

@@ -10,6 +10,14 @@ public class Empty
 {
 
 }
+[DataContract]
+public class BooleanGrpc
+{
+    [DataMember(Order = 1)]
+    public Boolean result { get; set; }
+    [DataMember(Order = 2)]
+    public String mess { get; set; }
+}
 
 [DataContract]
 public class ClassGrpc
@@ -31,6 +39,16 @@ public class ListClasses
     [DataMember(Order = 1)]
     public List<ClassGrpc> List = new List<ClassGrpc>();
 }
+[DataContract]
+public class Page
+{
+    [DataMember(Order = 1)]
+    public int PageNumber { get; set; }
+    [DataMember(Order = 2)]
+    public int PageSize { get; set; }
+    [DataMember(Order =3)] 
+    public ClassGrpc ClassGrpc { get; set; }
+}
 
 [ServiceContract]
 public interface ClassProto
@@ -42,11 +60,13 @@ public interface ClassProto
     ClassGrpc GetClassById(IntGrpc id,
         CallContext context = default);
     [OperationContract]
-    Empty AddClass(ClassGrpc request, CallContext context = default);
+    BooleanGrpc AddClass(ClassGrpc request, CallContext context = default);
     [OperationContract]
-    bool UpdateClass(ClassGrpc classGrpc, Empty request, CallContext context = default);
+    BooleanGrpc UpdateClass(ClassGrpc request, CallContext context = default);
     [OperationContract]
-    Empty DeleteClass(Empty request, CallContext context = default);
+    BooleanGrpc DeleteClass(ClassGrpc request, CallContext context = default);
+    [OperationContract]
+    ListClasses GetDataPage(Page page, CallContext context = default);
 }
 
 [DataContract]

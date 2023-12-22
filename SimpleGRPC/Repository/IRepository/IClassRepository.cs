@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Share;
 using SimpleGRPC.Model;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,13 @@ namespace SimpleGRPC.Repository.IRepository
     public interface IClassRepository
     {
         public List<Class> GetAllClasses();
+        public List<Class> GetDataPage(int pageNumber, int pageSize, Class classSearch);
         public Class GetClassById(int id);
-        public void AddNewClass(Class classNew);
+        public BooleanGrpc AddNewClass(Class classNew);
 
-        public Boolean UpdateClass(Class classUpdate);
+        public BooleanGrpc UpdateClass(Class classUpdate);
 
-        public void DeleteStudent(Class classDelete);
+        public BooleanGrpc DeleteClass(Class classDelete);
         public int GetIDNewClass();
 
     }

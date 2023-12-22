@@ -20,17 +20,24 @@ namespace BlazorWebAppRGPC.Service
             //var channel = GrpcChannel.ForAddress("https://localhost:7291", new GrpcChannelOptions { HttpHandler = httpHandler });
             return channel.CreateGrpcService<ClassProto>();
         }   
-        public void AddNewClass(ClassDTO classNew)
+        public BooleanGrpc AddNewClass(ClassDTO classNew)
         {
                 var client = getService();
-                Empty empty = new Empty();
                 ClassGrpc classGrpc = classMapper.ClassDTOToClassGrpc(classNew);
-                client.AddClass(classGrpc);
+                return client.AddClass(classGrpc);
+        }
+        public BooleanGrpc UpdateClass(ClassDTO classUpdate)
+        {
+            var client = getService();
+            var c = classMapper.ClassDTOToClassGrpc(classUpdate);
+            return client.UpdateClass(c);
         }
 
-        public void DeleteClass(Class classDelete)
+        public BooleanGrpc DeleteClass(ClassViewDTO classDelete)
         {
-            throw new NotImplementedException();
+            var client = getService();
+            var c = classMapper.ClassViewDTOToClassGrpc(classDelete);
+            return client.DeleteClass(c);
         }
 
         public List<ClassViewDTO> GetAllClasss()
@@ -49,7 +56,6 @@ namespace BlazorWebAppRGPC.Service
 
         public Class GetClassById(int id)
         {
-            Empty e = new Empty();
             var client = getService();
             var t = client.GetClassById(teacherMapper.ToIntGrpc(id));
             return classMapper.ClassGrpcToClass(t);
@@ -65,9 +71,20 @@ namespace BlazorWebAppRGPC.Service
             throw new NotImplementedException();
         }
 
-        public void UpdateClass(Class classUpdate)
+        public List<ClassViewDTO> GetDataPage(int pageNumber, int pageSize, ClassViewDTO classSearch)
         {
-            throw new NotImplementedException();
+            List<ClassViewDTO> listClasses = new List<ClassViewDTO>();
+            var client = getService();
+            ClassGrpc search = classMapper.ClassViewDTOToClassGrpc(classSearch);
+            Page p = new Page();
+            p.PageNumber = pageNumber; p.PageSize = pageSize; p.ClassGrpc = search;
+            var list = client.GetDataPage(p);
+            foreach (var c in list.List)
+            {
+                ClassViewDTO s = classMapper.ClassGrpcToClassViewDTO(c);
+                listClasses.Add(s);
+            }
+            return listClasses;
         }
     }
 }

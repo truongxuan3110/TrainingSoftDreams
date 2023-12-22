@@ -6,6 +6,7 @@ using BlazorWebAppRGPC.Service.IService;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Share;
+using System.Drawing.Printing;
 
 namespace BlazorWebAppRGPC.Pages
 {
@@ -17,27 +18,45 @@ namespace BlazorWebAppRGPC.Pages
 
 
         public List<ClassViewDTO> listClass = new List<ClassViewDTO>();
+        public List<ClassViewDTO> listClassPage = new List<ClassViewDTO>();
         public List<Teacher> listTeacher = new List<Teacher>();
         public ClassDTO classDTO = new ClassDTO();
         public Class _class = new Class();
+        public ClassViewDTO classSearch = new ClassViewDTO();
+        private PageView<Class> pageItems = new PageView<Class>();
+        private int pageNumber = 1;
+        private int pageSize = 2;
+        private int totalCount = 0;
 
         public bool isCreate = true;
         public bool isPopupVisible = false;
         protected override async Task OnInitializedAsync()
         {
+            listTeacher = teacherService.GetAllTeachers();
             await loadData();
         }
         private async Task loadData()
         {
+            listClassPage = classService.GetDataPage(pageNumber, pageSize, classSearch);
             listClass = classService.GetAllClasss();
-            //classObject = new ClassDTO();
+            totalCount = listClass.Count;
             StateHasChanged();
-
+        }
+        public async Task OnPaging()
+        {
+            await loadData();
+        }
+        private async void OnValidSubmit()
+        {
+            await loadData();
+        }
+        private void OnInvalidSubmit()
+        {
+            classSearch = new ClassViewDTO();
         }
         private void ShowPopupClass(ClassViewDTO classViewDTO)
         {
             isPopupVisible = true;
-            listTeacher = teacherService.GetAllTeachers();
 
             if (classViewDTO != null)
             {
@@ -52,36 +71,36 @@ namespace BlazorWebAppRGPC.Pages
         }
         private void OnSubmitSuccess()
         {
-            bool result = false;
+            BooleanGrpc check;
             if (isCreate)
             {
-                 classService.AddNewClass(classDTO);
+                check = classService.AddNewClass(classDTO);
             }
             else
             {
-                //result = studentRepository.UpdateStudent(student);
+                check = classService.UpdateClass(classDTO);
             }
-            if (result)
+            if (check.result)
             {
-                Success();
+                Success(check.mess);
             }
             else
             {
-                Error();
+                Error(check.mess);
             }
             close();
         }
         public void OnSubmitFail()
         {
-            Error();
+            Error("Fail");
         }
-        private void Error()
+        private void Error(string mes)
         {
-            message.Error("Fail");
+            message.Error(mes);
         }
-        private void Success()
+        private void Success(string mes)
         {
-            message.Success("Successfull");
+            message.Success(mes);
         }
         public void close()
         {
@@ -100,6 +119,11 @@ namespace BlazorWebAppRGPC.Pages
         {
             //pageNumber = 1;
             await loadData();
+        }
+        public void DeleteClass(ClassViewDTO classViewDTO)
+        {
+            classService.DeleteClass(classViewDTO);
+            UpdateListClass();
         }
     }
 }

@@ -12,7 +12,6 @@ namespace SimpleGRPC.Model
         public virtual string Name { get; set; }
         public virtual DateTime Dob { get; set; }
 
-        public virtual ICollection<Class> Class { get; set; }
 
     }
 

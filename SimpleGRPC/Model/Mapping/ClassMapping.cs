@@ -19,12 +19,6 @@ namespace SimpleGRPC.Model.Mapping
 
             Property(x => x.SubjectName);
             ManyToOne(x => x.Teacher, m => m.Column("teacher"));
-            Bag(x => x.Students, c =>
-            {
-                c.Key(k => k.Column("Class"));
-                c.Cascade(Cascade.All
-                          | Cascade.DeleteOrphans);
-            }, r => r.OneToMany());
         }
     }
 }

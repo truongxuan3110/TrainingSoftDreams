@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NHibernate.Linq;
 using System.Data;
+using Share;
+using System.Drawing.Printing;
 
 namespace SimpleGRPC.Repository
 {
@@ -20,39 +22,82 @@ namespace SimpleGRPC.Repository
             _session = session;
         }
 
-        public void AddNewClass(Class classNew)
+        public BooleanGrpc AddNewClass(Class classNew)
         {
             using (var session = _session.OpenStatelessSession())
             {
                 using (var transaction = session.BeginTransaction(IsolationLevel.Serializable))
                 {
+                    BooleanGrpc r = new BooleanGrpc();
                     try
                     {
-                        var listClass = GetAllClasses();    
-                        if(listClass.Count != 0)
-                        {
-                            classNew.Id = GetIDNewClass();
-                        }
-                        else
-                        {
-                            classNew.Id = 1;
-                        }
+                        classNew.Id = GetIDNewClass(); 
                         session.Insert(classNew);
                         transaction.Commit();
+                        r.result = true;
+                        r.mess = "Successfull";
                     }
                     catch (Exception ex)
                     {
-
                         Console.WriteLine($"An error occurred: {ex.Message}");
+                        r.result = false;
+                        r.mess = ex.Message;
                         transaction.Rollback();
                     }
+                    return r;
+                }
+            }
+        }
+        public BooleanGrpc UpdateClass(Class classUpdate)
+        {
+            using (var session = _session.OpenStatelessSession())
+            {
+                using (var transaction = session.BeginTransaction(IsolationLevel.Serializable))
+                {
+                    BooleanGrpc r = new BooleanGrpc();
+                    try
+                    {
+                        session.Update(classUpdate);
+                        transaction.Commit();
+                        r.result = true;
+                        r.mess = "Successfull";
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred: {ex.Message}");
+                        r.result = false;
+                        r.mess = ex.Message;
+                        transaction.Rollback();
+                    }
+                    return r;
                 }
             }
         }
 
-        public void DeleteStudent(Class classDelete)
+        public BooleanGrpc DeleteClass(Class classDelete)
         {
-            throw new NotImplementedException();
+            using (var session = _session.OpenStatelessSession())
+            {
+                using (var transaction = session.BeginTransaction(IsolationLevel.Serializable))
+                {
+                    BooleanGrpc r = new BooleanGrpc();
+                    try
+                    {
+                        session.Delete(classDelete);
+                        transaction.Commit();
+                        r.result = true;
+                        r.mess = "Successfull";
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred: {ex.Message}");
+                        r.result = false;
+                        r.mess = ex.Message;
+                        transaction.Rollback();
+                    }
+                    return r;
+                }
+            }
         }
 
         public List<Class> GetAllClasses()
@@ -75,13 +120,53 @@ namespace SimpleGRPC.Repository
 
         public int GetIDNewClass()
         {
-            var c = GetAllClasses().OrderByDescending(x => x.Id).First();
-            return c.Id + 1;
+            try
+            {
+                using (var session = _session.OpenSession())
+                {
+                    var c = session.Query<Class>().Max(c => c.Id);
+                    return c + 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
         }
 
-        public bool UpdateClass(Class classUpdate)
+        public List<Class> GetDataPage(int pageNumber, int pageSize, Class classSearch)
         {
-            throw new NotImplementedException();
+            using (var session = _session.OpenSession())
+            {
+                try
+                {
+                    var query = session.Query<Class>();
+                    query = Filter(query, classSearch);
+                    return query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                
+            }
+        }
+        private IQueryable<Class> Filter(IQueryable<Class> query, Class classSearch)
+        {
+            if (!string.IsNullOrWhiteSpace(classSearch.Name))
+            {
+                query = query.Fetch(s => s.Teacher).Where(x => x.Name.Contains(classSearch.Name));
+            }
+            if (!string.IsNullOrWhiteSpace(classSearch.SubjectName))
+            {
+                query = query.Fetch(s => s.Teacher).Where(x => x.SubjectName.Contains(classSearch.SubjectName));
+            }
+            if (classSearch.Teacher != null)
+            {
+                query = query.Fetch(s => s.Teacher).Where(x => x.Teacher.Id == classSearch.Teacher.Id);
+            }
+            return query;
         }
     }
 }

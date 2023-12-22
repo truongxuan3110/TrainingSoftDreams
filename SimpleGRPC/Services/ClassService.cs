@@ -10,34 +10,33 @@ namespace SimpleGRPC.Services
     public class ClassService : ClassProto
     {
         private readonly ILogger<ClassService> logger;
-        private readonly IClassRepository _classRepository;
+        private readonly IClassRepository classRepository;
         private static ITeacherRepository teacherRepository;
         ClassMapper classMapper = new ClassMapper(teacherRepository);
 
-        public ClassService(ILogger<ClassService> logger, IClassRepository classRepository, ITeacherRepository teacher)
+        public ClassService(ILogger<ClassService> logger, IClassRepository _classRepository, ITeacherRepository _teacherRepository)
         {
             this.logger = logger;
-            _classRepository = classRepository;
-            teacherRepository = teacher;
+            classRepository = _classRepository;
+            teacherRepository = _teacherRepository;
         }
 
-        public Empty AddClass(ClassGrpc request, CallContext context = default)
+        public BooleanGrpc AddClass(ClassGrpc request, CallContext context = default)
         {
             Class classNew = classMapper.ClassGrpcToClass(request);
-            _classRepository.AddNewClass(classNew);
-            Empty empty = new Empty();
-            return empty;
+            return classRepository.AddNewClass(classNew);
         }
 
-        public Empty DeleteClass(Empty request, CallContext context = default)
+        public BooleanGrpc DeleteClass(ClassGrpc request, CallContext context = default)
         {
-            throw new NotImplementedException();
+            Class classDelete = classMapper.ClassGrpcToClass(request);
+            return classRepository.DeleteClass(classDelete);
         }
 
         public ListClasses GetListClass(Empty request, CallContext context = default)
         {
             ListClasses listClasses = new ListClasses();
-            List<Class> classes = _classRepository.GetAllClasses();
+            List<Class> classes = classRepository.GetAllClasses();
             foreach (var item in classes)
             {
                 ClassGrpc classGrpc = classMapper.ClassToClassGrpc(item);
@@ -46,15 +45,37 @@ namespace SimpleGRPC.Services
             return listClasses;
         }
 
-        public Boolean UpdateClass(ClassGrpc classGrpc, Empty request, CallContext context = default)
+        public BooleanGrpc UpdateClass(ClassGrpc request, CallContext context = default)
         {
-            throw new NotImplementedException();
+            Class classUpdate = classMapper.ClassGrpcToClass(request);
+            return classRepository.UpdateClass(classUpdate);
         }
 
         public ClassGrpc GetClassById(IntGrpc id, CallContext context = default)
         {
-            Class t = _classRepository.GetClassById(id.Id);
+            Class t = classRepository.GetClassById(id.Id);
             return classMapper.ClassToClassGrpc(t);
+        }
+
+        public ListClasses GetDataPage(Page page, CallContext context = default)
+        {
+            ListClasses listClasses = new ListClasses();
+            Class classSearch;
+            if (page.ClassGrpc.Id != 0)
+            {
+                classSearch = classMapper.ClassGrpcToClass(page.ClassGrpc);
+            }
+            else
+            {
+                classSearch = new Class();
+            } 
+            var classes = classRepository.GetDataPage(page.PageNumber, page.PageSize, classSearch);
+            foreach (var item in classes)
+            {
+                ClassGrpc classItem = classMapper.ClassToClassGrpc(item);
+                listClasses.List.Add(classItem);
+            }
+            return listClasses;
         }
     }
 }

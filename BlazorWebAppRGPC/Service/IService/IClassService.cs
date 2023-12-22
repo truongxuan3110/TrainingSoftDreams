@@ -1,5 +1,6 @@
 ﻿using BlazorWebAppRGPC.Model;
 using BlazorWebAppRGPC.Model.DTO;
+using Share;
 
 namespace BlazorWebAppRGPC.Service.IService
 {
@@ -7,15 +8,16 @@ namespace BlazorWebAppRGPC.Service.IService
     {
         public List<ClassViewDTO> GetAllClasss();
 
-        public void AddNewClass(ClassDTO classNew);
+        public BooleanGrpc AddNewClass(ClassDTO classNew);
 
-        public void UpdateClass(Class classUpdate);
+        public BooleanGrpc UpdateClass(ClassDTO classUpdate);
 
-        public void DeleteClass(Class classDelete);
+        public BooleanGrpc DeleteClass(ClassViewDTO classDelete);
 
         public List<Class> SortData();
 
         public Class GetClassById(int id);
         public int GetIDNewClass();
+        public List<ClassViewDTO> GetDataPage(int pageNumber, int pageSize, ClassViewDTO classSearch);
     }
 }

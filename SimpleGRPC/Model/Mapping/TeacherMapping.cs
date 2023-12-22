@@ -20,13 +20,6 @@ namespace SimpleGRPC.Model.Mapping
             Property(x => x.Name);
 
             Property(x => x.Dob);
-
-            Bag(x => x.Class, c =>
-            {
-                c.Key(k => k.Column("Teacher"));
-                c.Cascade(Cascade.All | Cascade.DeleteOrphans);
-                c.Inverse(true);
-            }, r => r.OneToMany());
         }
     }
 }
