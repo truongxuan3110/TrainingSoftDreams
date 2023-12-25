@@ -10,7 +10,7 @@ namespace BlazorWebAppRGPC.Service
 {
     public class ClassService : IClassService
     {
-        ClassMapper classMapper = new ClassMapper();
+        ClasssMapper classMapper = new ClasssMapper();
         TeacherMapper teacherMapper = new TeacherMapper();
         public ClassProto getService()
         {
@@ -71,19 +71,22 @@ namespace BlazorWebAppRGPC.Service
             throw new NotImplementedException();
         }
 
-        public List<ClassViewDTO> GetDataPage(int pageNumber, int pageSize, ClassViewDTO classSearch)
+        public DataPageItem GetDataPage(int pageNumber, int pageSize, ClassViewDTO classSearch)
         {
-            List<ClassViewDTO> listClasses = new List<ClassViewDTO>();
+            DataPageItem listClasses = new DataPageItem();
             var client = getService();
             ClassGrpc search = classMapper.ClassViewDTOToClassGrpc(classSearch);
             Page p = new Page();
             p.PageNumber = pageNumber; p.PageSize = pageSize; p.ClassGrpc = search;
             var list = client.GetDataPage(p);
+            var stt = (pageNumber - 1) * pageSize + 1;
             foreach (var c in list.List)
             {
                 ClassViewDTO s = classMapper.ClassGrpcToClassViewDTO(c);
-                listClasses.Add(s);
+                s.STT = stt++;
+                listClasses.ClassViews.Add(s);
             }
+            listClasses.Total = list.Total;
             return listClasses;
         }
     }

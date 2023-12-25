@@ -5,7 +5,7 @@ using Share;
 
 namespace BlazorWebAppRGPC.Model.Mapper
 {
-    public class ClassMapper
+    public class ClasssMapper
     {
         ITeacherService teacherService = new TeacherService();
         public Class ClassGrpcToClass(ClassGrpc classGrpc)

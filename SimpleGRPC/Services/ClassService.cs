@@ -57,11 +57,11 @@ namespace SimpleGRPC.Services
             return classMapper.ClassToClassGrpc(t);
         }
 
-        public ListClasses GetDataPage(Page page, CallContext context = default)
+        public DataPage GetDataPage(Page page, CallContext context = default)
         {
-            ListClasses listClasses = new ListClasses();
+            DataPage listClasses = new DataPage();
             Class classSearch;
-            if (page.ClassGrpc.Id != 0)
+            if (page.ClassGrpc.TeacherId != 0 || !string.IsNullOrEmpty(page.ClassGrpc.Name) || !string.IsNullOrEmpty(page.ClassGrpc.Subject))
             {
                 classSearch = classMapper.ClassGrpcToClass(page.ClassGrpc);
             }
@@ -70,11 +70,12 @@ namespace SimpleGRPC.Services
                 classSearch = new Class();
             } 
             var classes = classRepository.GetDataPage(page.PageNumber, page.PageSize, classSearch);
-            foreach (var item in classes)
+            foreach (var item in classes.ClassList)
             {
                 ClassGrpc classItem = classMapper.ClassToClassGrpc(item);
                 listClasses.List.Add(classItem);
             }
+            listClasses.Total = classes.Total;
             return listClasses;
         }
     }

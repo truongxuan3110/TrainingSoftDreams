@@ -26,7 +26,10 @@ namespace SimpleGRPC.Model.Mapper
             _class.Id = classGrpc.Id;
             _class.Name = classGrpc.Name;
             _class.SubjectName = classGrpc.Subject;
-            _class.Teacher = teacherRepository.GetTeacherById(classGrpc.TeacherId);
+            if(classGrpc.TeacherId != -1 && classGrpc.TeacherId != 0)
+            {
+                _class.Teacher = teacherRepository.GetTeacherById(classGrpc.TeacherId);
+            }
             return _class;
         }
     }

@@ -18,6 +18,6 @@ namespace BlazorWebAppRGPC.Service.IService
 
         public Class GetClassById(int id);
         public int GetIDNewClass();
-        public List<ClassViewDTO> GetDataPage(int pageNumber, int pageSize, ClassViewDTO classSearch);
+        public DataPageItem GetDataPage(int pageNumber, int pageSize, ClassViewDTO classSearch);
     }
 }

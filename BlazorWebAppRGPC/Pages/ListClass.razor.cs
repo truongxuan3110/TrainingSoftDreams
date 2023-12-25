@@ -1,4 +1,5 @@
-﻿using BlazorWebAppRGPC.Model;
+﻿using AntDesign;
+using BlazorWebAppRGPC.Model;
 using BlazorWebAppRGPC.Model.DTO;
 using BlazorWebAppRGPC.Model.Mapper;
 using BlazorWebAppRGPC.Service;
@@ -14,7 +15,8 @@ namespace BlazorWebAppRGPC.Pages
     {
         [Inject] IClassService classService { get; set; }
         [Inject] ITeacherService teacherService { get; set; }
-        [Inject] ClassMapper classMapper { get; set; }
+        [Inject] ClasssMapper classMapper { get; set; }
+        [Inject] IMessageService message {  get; set; }
 
 
         public List<ClassViewDTO> listClass = new List<ClassViewDTO>();
@@ -23,9 +25,8 @@ namespace BlazorWebAppRGPC.Pages
         public ClassDTO classDTO = new ClassDTO();
         public Class _class = new Class();
         public ClassViewDTO classSearch = new ClassViewDTO();
-        private PageView<Class> pageItems = new PageView<Class>();
         private int pageNumber = 1;
-        private int pageSize = 2;
+        private int pageSize = 5;
         private int totalCount = 0;
 
         public bool isCreate = true;
@@ -37,9 +38,9 @@ namespace BlazorWebAppRGPC.Pages
         }
         private async Task loadData()
         {
-            listClassPage = classService.GetDataPage(pageNumber, pageSize, classSearch);
-            listClass = classService.GetAllClasss();
-            totalCount = listClass.Count;
+            var result = classService.GetDataPage(pageNumber, pageSize, classSearch);
+            listClassPage = result.ClassViews;
+            totalCount = result.Total;
             StateHasChanged();
         }
         public async Task OnPaging()
@@ -48,6 +49,7 @@ namespace BlazorWebAppRGPC.Pages
         }
         private async void OnValidSubmit()
         {
+            pageNumber = 1;
             await loadData();
         }
         private void OnInvalidSubmit()
@@ -96,11 +98,11 @@ namespace BlazorWebAppRGPC.Pages
         }
         private void Error(string mes)
         {
-            message.Error(mes);
+            message.Error(mes,5);
         }
         private void Success(string mes)
         {
-            message.Success(mes);
+            message.Success(mes,5);
         }
         public void close()
         {
@@ -111,18 +113,26 @@ namespace BlazorWebAppRGPC.Pages
         {
             classDTO = new ClassDTO();
             isCreate = true;
-            //studentSearch = new StudentSearch();
+            classSearch = new ClassViewDTO();
 
             UpdateListClass();
         }
         private async void UpdateListClass()
         {
-            //pageNumber = 1;
+            pageNumber = 1;
             await loadData();
         }
         public void DeleteClass(ClassViewDTO classViewDTO)
         {
-            classService.DeleteClass(classViewDTO);
+            var check = classService.DeleteClass(classViewDTO);
+            if (check.result)
+            {
+                Success(check.mess);
+            }
+            else
+            {
+                Error(check.mess);
+            }
             UpdateListClass();
         }
     }

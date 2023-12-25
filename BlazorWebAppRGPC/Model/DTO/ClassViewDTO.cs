@@ -2,6 +2,7 @@
 {
     public class ClassViewDTO
     {
+        public int STT { get; set; }
         public int Id { get; set; }
 
         public String Name { get; set; }

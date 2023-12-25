@@ -12,7 +12,7 @@ namespace SimpleGRPC.Repository.IRepository
     public interface IClassRepository
     {
         public List<Class> GetAllClasses();
-        public List<Class> GetDataPage(int pageNumber, int pageSize, Class classSearch);
+        public DataItems GetDataPage(int pageNumber, int pageSize, Class classSearch);
         public Class GetClassById(int id);
         public BooleanGrpc AddNewClass(Class classNew);
 

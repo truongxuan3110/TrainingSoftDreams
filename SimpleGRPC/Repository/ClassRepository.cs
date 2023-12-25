@@ -135,15 +135,18 @@ namespace SimpleGRPC.Repository
             
         }
 
-        public List<Class> GetDataPage(int pageNumber, int pageSize, Class classSearch)
+        public DataItems GetDataPage(int pageNumber, int pageSize, Class classSearch)
         {
             using (var session = _session.OpenSession())
             {
                 try
                 {
+                    DataItems result = new DataItems();
                     var query = session.Query<Class>();
                     query = Filter(query, classSearch);
-                    return query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                    result.Total = query.Count();
+                    result.ClassList = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                    return result;
                 }
                 catch (Exception ex)
                 {

@@ -2,8 +2,6 @@
 @using AntDesign;
 @using BlazorWebAppRGPC.Model.DTO;
 @using BlazorWebAppRGPC.Model;
-@inject IMessageService message
-
 
 <h3>ListClass</h3>
 <Button OnClick="()=>ShowPopupClass(null)" Icon="plus">Add</Button>
@@ -39,7 +37,7 @@
 <br />
 
 <Table TItem="ClassViewDTO" DataSource="@listClassPage" Total="totalCount" @bind-PageIndex="pageNumber" @bind-PageSize="pageSize" OnChange="OnPaging">
-    <Column @bind-Field="context.Id"></Column>
+    <Column @bind-Field="context.STT"></Column>
     <Column @bind-Field="context.Name"></Column>
     <Column @bind-Field="context.SubjectName"></Column>
     <Column @bind-Field="context.TeacherName"></Column>

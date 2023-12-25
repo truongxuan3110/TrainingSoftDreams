@@ -40,6 +40,14 @@ public class ListClasses
     public List<ClassGrpc> List = new List<ClassGrpc>();
 }
 [DataContract]
+public class DataPage
+{
+    [DataMember(Order = 1)]
+    public List<ClassGrpc> List = new List<ClassGrpc>();
+    [DataMember(Order = 2)]
+    public int Total { get; set; }
+}
+[DataContract]
 public class Page
 {
     [DataMember(Order = 1)]
@@ -66,7 +74,7 @@ public interface ClassProto
     [OperationContract]
     BooleanGrpc DeleteClass(ClassGrpc request, CallContext context = default);
     [OperationContract]
-    ListClasses GetDataPage(Page page, CallContext context = default);
+    DataPage GetDataPage(Page page, CallContext context = default);
 }
 
 [DataContract]
