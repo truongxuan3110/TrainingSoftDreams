@@ -1,40 +1,31 @@
 ﻿@page "/listClass"
-@using AntDesign;
-@using BlazorWebAppRGPC.Model.DTO;
-@using BlazorWebAppRGPC.Model;
 
 <h3>ListClass</h3>
 <Button OnClick="()=>ShowPopupClass(null)" Icon="plus">Add</Button>
 
-<div>
-    <EditForm Model="@classSearch" OnValidSubmit="@OnValidSubmit" OnInvalidSubmit="@OnInvalidSubmit">
-        <div class="row">
-            <div class="form-group col-md-2">
-                <label for="name">Class Name</label>
-                <Input @bind-Value="@classSearch.Name" id="name" />
-            </div>
-            <div class="form-group col-md-2">
-                <label for="address">Subject</label>
-                <Input @bind-Value="@classSearch.SubjectName" id="address" />
-            </div>
-            <div class="form-group col-md-2">
-                <label for="form-select">Teacher</label>
-                <InputSelect @bind-Value="@classSearch.TeacherId" class="form-select">
-                    <option value="-1">All Teachers</option>
-                    @foreach (var c in listTeacher)
-                    {
-                        <option value="@c.Id">@c.Name</option>
-                    }
-                </InputSelect>
-            </div>
-            <div class="form-group col-md-2">
-                <Button HtmlType="submit" Style="margin-top: 25px">Search</Button>
-            </div>
-        </div>
-    </EditForm>
-
-</div>
-<br />
+<Form Model="@classSearch"
+      LabelColSpan="2" WrapperColSpan="4" 
+      OnFinish="OnValidSubmit" OnFinishFailed="OnInvalidSubmit">
+      <FormItem Label="Class Name">
+        <Input @bind-Value="@classSearch.Name" />
+    </FormItem>
+    <FormItem Label="Subject">
+        <Input @bind-Value="@classSearch.SubjectName" />
+    </FormItem>
+    <FormItem Label="Teacher">
+        <Select Mode="default"
+                DataSource="listTeacher"
+        @bind-Value="@classSearch.TeacherId"
+                LabelName="@nameof(Teacher.Name)"
+                ValueName="@nameof(Teacher.Id)">
+        </Select>
+    </FormItem>
+    <FormItem WrapperColOffset="2" WrapperColSpan="4">
+        <Button HtmlType="submit">
+            Search
+        </Button>
+    </FormItem>
+</Form>
 
 <Table TItem="ClassViewDTO" DataSource="@listClassPage" Total="totalCount" @bind-PageIndex="pageNumber" @bind-PageSize="pageSize" OnChange="OnPaging">
     <Column @bind-Field="context.STT"></Column>
@@ -57,43 +48,28 @@
         </Space>
     </ActionColumn>
 </Table>
+
 <Modal Visible="@isPopupVisible" Title="Add/Update Class" Closable="false">
-    <EditForm Model="classDTO" OnValidSubmit="OnSubmitSuccess" OnInvalidSubmit="OnSubmitFail">
-        <DataAnnotationsValidator />
-        <div class="form-row">
-            <div class="col-md-12 mb-8">
-                <div class="form-outline">
-                    <label class="form-label" for="name">Name</label>
-                    <InputText type="text" id="name" class="form-control" placeholder="Name"
-                    @bind-Value="@classDTO.Name" />
-                    <ValidationMessage For="@(() => classDTO.Name)" />
-                </div>
-            </div>
-            <div class="col-md-12 mb-8">
-                <div class="form-outline">
-                    <label class="form-label" for="address">Subject</label>
-                    <InputText type="text" id="subject" class="form-control" placeholder="Subject"
-                    @bind-Value="@classDTO.SubjectName" />
-                    <ValidationMessage For="@(() => classDTO.SubjectName)" />
-                </div>
-            </div>
-            <div class="col-md-12 mb-8">
-                <div class="form-outline">
-                    <label class="form-label" for="class">Teacher</label>
-                    <InputSelect @bind-Value="@classDTO.TeacherId" class="form-select">
-                        @foreach (var c in listTeacher)
-                        {
-                            <option value="@c.Id">@c.Name</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => classDTO.TeacherId)" />
-                </div>
-            </div>
-        </div>
-        <br />
-        <Button HtmlType="submit">Save</Button>
-        <Button Type="default" OnClick="_=>close()">Cancel</Button>
-    </EditForm>
+    <Form Model="@classDTO"
+          LabelColSpan="5" WrapperColSpan="10"
+          OnFinish="OnSubmitSuccess" OnFinishFailed="OnSubmitFail">
+        <FormItem Label="Class Name">
+            <Input @bind-Value="@classDTO.Name" />
+        </FormItem>
+        <FormItem Label="Subject">
+            <Input @bind-Value="@classDTO.SubjectName" />
+        </FormItem>
+        <FormItem Label="Teacher">
+            <Select Mode="default"
+                    DataSource="listTeacher"
+            @bind-Value="@classDTO.TeacherId"
+                    LabelName="@nameof(Teacher.Name)"
+                    ValueName="@nameof(Teacher.Id)">
+            </Select>
+        </FormItem>
+            <Button HtmlType="submit">Save</Button>
+            <Button Type="default" OnClick="_=>close()">Cancel</Button>
+    </Form>
 </Modal>
 <style>
     .ant-modal-footer {

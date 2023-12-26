@@ -145,7 +145,7 @@ namespace SimpleGRPC.Repository
                     var query = session.Query<Class>();
                     query = Filter(query, classSearch);
                     result.Total = query.Count();
-                    result.ClassList = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                    result.ClassList = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).Fetch(s => s.Teacher).ToList();
                     return result;
                 }
                 catch (Exception ex)
@@ -159,15 +159,15 @@ namespace SimpleGRPC.Repository
         {
             if (!string.IsNullOrWhiteSpace(classSearch.Name))
             {
-                query = query.Fetch(s => s.Teacher).Where(x => x.Name.Contains(classSearch.Name));
+                query = query.Where(x => x.Name.Contains(classSearch.Name));
             }
             if (!string.IsNullOrWhiteSpace(classSearch.SubjectName))
             {
-                query = query.Fetch(s => s.Teacher).Where(x => x.SubjectName.Contains(classSearch.SubjectName));
+                query = query.Where(x => x.SubjectName.Contains(classSearch.SubjectName));
             }
             if (classSearch.Teacher != null)
             {
-                query = query.Fetch(s => s.Teacher).Where(x => x.Teacher.Id == classSearch.Teacher.Id);
+                query = query.Where(x => x.Teacher.Id == classSearch.Teacher.Id);
             }
             return query;
         }

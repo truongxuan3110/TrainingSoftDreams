@@ -59,17 +59,19 @@ namespace BlazorWebAppRGPC.Pages
         private void ShowPopupClass(ClassViewDTO classViewDTO)
         {
             isPopupVisible = true;
-
+            classDTO = new ClassDTO();
             if (classViewDTO != null)
             {
                 isCreate = false;
-                _class = classService.GetClassById(classViewDTO.Id);
+                classDTO.Id = classViewDTO.Id;
+                classDTO.Name = classViewDTO.Name;
+                classDTO.SubjectName = classViewDTO.SubjectName;
+                classDTO.TeacherId = classViewDTO.TeacherId;
             }
             else
             {
                 isCreate = true;
             }
-            classDTO = classMapper.ClassToClassDTO(_class, isCreate);
         }
         private void OnSubmitSuccess()
         {
@@ -102,7 +104,7 @@ namespace BlazorWebAppRGPC.Pages
         }
         private void Success(string mes)
         {
-            message.Success(mes,5);
+            message.Success(mes,3);
         }
         public void close()
         {
