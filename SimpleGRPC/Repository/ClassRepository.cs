@@ -31,7 +31,8 @@ namespace SimpleGRPC.Repository
                     BooleanGrpc r = new BooleanGrpc();
                     try
                     {
-                        classNew.Id = GetIDNewClass(); 
+                        classNew.Id = GetIDNewClass();
+                        classNew.IsDeleted = 0;
                         session.Insert(classNew);
                         transaction.Commit();
                         r.result = true;
@@ -83,7 +84,8 @@ namespace SimpleGRPC.Repository
                     BooleanGrpc r = new BooleanGrpc();
                     try
                     {
-                        session.Delete(classDelete);
+                        classDelete.IsDeleted = 1;
+                        session.Update(classDelete);
                         transaction.Commit();
                         r.result = true;
                         r.mess = "Successfull";
@@ -142,7 +144,7 @@ namespace SimpleGRPC.Repository
                 try
                 {
                     DataItems result = new DataItems();
-                    var query = session.Query<Class>();
+                    var query = session.Query<Class>().Where(x=>x.IsDeleted != 1);
                     query = Filter(query, classSearch);
                     result.Total = query.Count();
                     result.ClassList = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).Fetch(s => s.Teacher).ToList();

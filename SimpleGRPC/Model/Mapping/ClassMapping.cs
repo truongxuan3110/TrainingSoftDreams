@@ -18,6 +18,7 @@ namespace SimpleGRPC.Model.Mapping
             Property(x => x.Name);
 
             Property(x => x.SubjectName);
+            Property(x => x.IsDeleted);
             ManyToOne(x => x.Teacher, m => m.Column("teacher"));
         }
     }

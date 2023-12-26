@@ -9,6 +9,7 @@ namespace SimpleGRPC.Model
     public class Class
     {
         public virtual int Id { get; set; }
+        public virtual int IsDeleted { get; set; }
         public virtual string Name { get; set; }
         public virtual string SubjectName { get; set; }
         public virtual Teacher Teacher { get; set; }

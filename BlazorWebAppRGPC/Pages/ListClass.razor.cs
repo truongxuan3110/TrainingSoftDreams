@@ -13,33 +13,33 @@ namespace BlazorWebAppRGPC.Pages
 {
     public partial class ListClass
     {
-        [Inject] IClassService classService { get; set; }
-        [Inject] ITeacherService teacherService { get; set; }
-        [Inject] ClasssMapper classMapper { get; set; }
-        [Inject] IMessageService message {  get; set; }
+        [Inject] IClassService ClassService { get; set; }
+        [Inject] ITeacherService TeacherService { get; set; }
+        [Inject] IMessageService Message {  get; set; }
 
 
-        public List<ClassViewDTO> listClass = new List<ClassViewDTO>();
-        public List<ClassViewDTO> listClassPage = new List<ClassViewDTO>();
-        public List<Teacher> listTeacher = new List<Teacher>();
-        public ClassDTO classDTO = new ClassDTO();
-        public Class _class = new Class();
-        public ClassViewDTO classSearch = new ClassViewDTO();
-        private int pageNumber = 1;
-        private int pageSize = 5;
-        private int totalCount = 0;
+        public List<ClassViewDTO> ListClasss = new List<ClassViewDTO>();
+        public List<ClassViewDTO> ListClassPage = new List<ClassViewDTO>();
+        public List<Teacher> ListTeachers = new List<Teacher>();
+        public ClassDTO ClassDTO = new ClassDTO();
+        public Class Classs = new Class();
+        public ClassViewDTO ClassSearch = new ClassViewDTO();
+
+        public int pageNumber = 1;
+        public int pageSize = 5;
+        public int totalCount = 0;
 
         public bool isCreate = true;
         public bool isPopupVisible = false;
         protected override async Task OnInitializedAsync()
         {
-            listTeacher = teacherService.GetAllTeachers();
+            ListTeachers = TeacherService.GetAllTeachers();
             await loadData();
         }
         private async Task loadData()
         {
-            var result = classService.GetDataPage(pageNumber, pageSize, classSearch);
-            listClassPage = result.ClassViews;
+            var result = ClassService.GetDataPage(pageNumber, pageSize, ClassSearch);
+            ListClassPage = result.ClassViews;
             totalCount = result.Total;
             StateHasChanged();
         }
@@ -54,19 +54,19 @@ namespace BlazorWebAppRGPC.Pages
         }
         private void OnInvalidSubmit()
         {
-            classSearch = new ClassViewDTO();
+            ClassSearch = new ClassViewDTO();
         }
         private void ShowPopupClass(ClassViewDTO classViewDTO)
         {
             isPopupVisible = true;
-            classDTO = new ClassDTO();
+            ClassDTO = new ClassDTO();
             if (classViewDTO != null)
             {
                 isCreate = false;
-                classDTO.Id = classViewDTO.Id;
-                classDTO.Name = classViewDTO.Name;
-                classDTO.SubjectName = classViewDTO.SubjectName;
-                classDTO.TeacherId = classViewDTO.TeacherId;
+                ClassDTO.Id = classViewDTO.Id;
+                ClassDTO.Name = classViewDTO.Name;
+                ClassDTO.SubjectName = classViewDTO.SubjectName;
+                ClassDTO.TeacherId = classViewDTO.TeacherId;
             }
             else
             {
@@ -78,11 +78,11 @@ namespace BlazorWebAppRGPC.Pages
             BooleanGrpc check;
             if (isCreate)
             {
-                check = classService.AddNewClass(classDTO);
+                check = ClassService.AddNewClass(ClassDTO);
             }
             else
             {
-                check = classService.UpdateClass(classDTO);
+                check = ClassService.UpdateClass(ClassDTO);
             }
             if (check.result)
             {
@@ -100,11 +100,11 @@ namespace BlazorWebAppRGPC.Pages
         }
         private void Error(string mes)
         {
-            message.Error(mes,5);
+            Message.Error(mes,5);
         }
         private void Success(string mes)
         {
-            message.Success(mes,3);
+            Message.Success(mes,3);
         }
         public void close()
         {
@@ -113,9 +113,9 @@ namespace BlazorWebAppRGPC.Pages
         }
         public void Clear()
         {
-            classDTO = new ClassDTO();
+            ClassDTO = new ClassDTO();
             isCreate = true;
-            classSearch = new ClassViewDTO();
+            ClassSearch = new ClassViewDTO();
 
             UpdateListClass();
         }
@@ -126,7 +126,7 @@ namespace BlazorWebAppRGPC.Pages
         }
         public void DeleteClass(ClassViewDTO classViewDTO)
         {
-            var check = classService.DeleteClass(classViewDTO);
+            var check = ClassService.DeleteClass(classViewDTO);
             if (check.result)
             {
                 Success(check.mess);
