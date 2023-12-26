@@ -6,18 +6,14 @@ namespace SimpleGRPC.Model.Mapper
 {
     public class ClassMapper
     {
-        ITeacherRepository teacherRepository { get; set; }
-        public ClassMapper(ITeacherRepository _teacherRepository)
-        {
-            this.teacherRepository = _teacherRepository;
-        }
-        public ClassGrpc ClassToClassGrpc(Class _class)
+        public ClassGrpc ClassToClassGrpc(Class classs)
         {
             ClassGrpc classGrpc = new ClassGrpc();
-            classGrpc.Id = _class.Id;
-            classGrpc.Name = _class.Name;
-            classGrpc.Subject = _class.SubjectName;
-            classGrpc.TeacherId = _class.Teacher.Id;
+            classGrpc.Id = classs.Id;
+            classGrpc.Name = classs.Name;
+            classGrpc.Subject = classs.SubjectName;
+            classGrpc.TeacherId = classs.Teacher.Id;
+            classGrpc.TeacherName = classs.Teacher.Name;
             return classGrpc;
         }
         public Class ClassGrpcToClass(ClassGrpc classGrpc)
@@ -28,7 +24,10 @@ namespace SimpleGRPC.Model.Mapper
             _class.SubjectName = classGrpc.Subject;
             if(classGrpc.TeacherId != -1 && classGrpc.TeacherId != 0)
             {
-                _class.Teacher = teacherRepository.GetTeacherById(classGrpc.TeacherId);
+                _class.Teacher = new Teacher
+                {
+                    Id = classGrpc.TeacherId,
+                };
             }
             return _class;
         }

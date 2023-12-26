@@ -32,6 +32,8 @@ public class ClassGrpc
 
     [DataMember(Order = 4)]
     public virtual int TeacherId { get; set; }
+    [DataMember(Order = 5)]
+    public virtual string TeacherName { get; set; }
 }
 [DataContract]
 public class ListClasses

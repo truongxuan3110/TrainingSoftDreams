@@ -11,14 +11,12 @@ namespace SimpleGRPC.Services
     {
         private readonly ILogger<ClassService> logger;
         private readonly IClassRepository classRepository;
-        private static ITeacherRepository teacherRepository;
-        ClassMapper classMapper = new ClassMapper(teacherRepository);
+        ClassMapper classMapper = new ClassMapper();
 
-        public ClassService(ILogger<ClassService> logger, IClassRepository _classRepository, ITeacherRepository _teacherRepository)
+        public ClassService(ILogger<ClassService> logger, IClassRepository _classRepository)
         {
             this.logger = logger;
             classRepository = _classRepository;
-            teacherRepository = _teacherRepository;
         }
 
         public BooleanGrpc AddClass(ClassGrpc request, CallContext context = default)

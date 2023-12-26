@@ -54,12 +54,6 @@ namespace BlazorWebAppRGPC.Service
             return listClasses;
         }
 
-        public Class GetClassById(int id)
-        {
-            var client = getService();
-            var t = client.GetClassById(TeacherMapper.ToIntGrpc(id));
-            return ClassMapper.ClassGrpcToClass(t);
-        }
 
         public int GetIDNewClass()
         {
@@ -88,6 +82,11 @@ namespace BlazorWebAppRGPC.Service
             }
             listClasses.Total = list.Total;
             return listClasses;
+        }
+
+        public Class GetClassById(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
